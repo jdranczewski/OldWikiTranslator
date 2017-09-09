@@ -134,9 +134,18 @@ textarea {
     pointer-events: none;
 }
 
+#autocomplete {
+    position: absolute;
+    background-color: white;
+    border: solid #a5a5a5 1px;
+    text-align: left;
+    display: none;
+}
 
-
-
+.ac_el {
+    padding: 7px 25px;
+    border-bottom: solid #e1e1e1 1px;
+}
 
 
 
