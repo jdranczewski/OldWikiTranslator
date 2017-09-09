@@ -95,14 +95,44 @@ textarea {
    Author's custom styles
    ========================================================================== */
 
+#translator {
+    text-align: center;
+}
 
+.box {
+    width: 40%;
+    background-color: #2196F3;
+    display: inline-block;
+}
 
+.title {
+    color: white;
+    font-size: 2em;
+}
 
+#search_box {
+    border: none;
+    background-color: transparent;
+}
 
+.extract {
+    min-height: 250px;
+}
 
+.more {
+    display: block;
+    text-decoration: none;
+    color: white;
+    background-color: #FFC107;
+    margin: 5px;
+    border-radius: 2px;
+    padding: 5px;
+}
 
-
-
+.disabled {
+    background-color: lightgrey;
+    pointer-events: none;
+}
 
 
 

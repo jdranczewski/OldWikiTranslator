@@ -20,16 +20,18 @@
         <![endif]-->
 
         <!-- Add your site or application content here -->
-        <div class="box">
-            <div class="title" id="from_title"><input type="text"/></div>
-            <div class="extract" id="from_extract"></div>
-            <a class="more disabled" href="#" title="Go to the Wikipedia article" id="from_link">Continue to article...</a>
-        </div>
-        
-        <div class="box">
-            <div class="title" id="to_title"></div>
-            <div class="extract" id="to_extract"></div>
-            <a class="more disabled" href="#" title="Go to the Wikipedia article" id="to_link">Continue to article...</a>
+        <div id="translator">
+            <div class="box">
+                <div class="title" id="from_title"><input type="text" id="search_box" placeholder="Type here..."/></div>
+                <div class="extract" id="from_extract"></div>
+                <a class="more disabled" href="#" title="Go to the Wikipedia article" id="from_link">Continue to article...</a>
+            </div>
+
+            <div class="box">
+                <div class="title" id="to_title">Answer...</div>
+                <div class="extract" id="to_extract"></div>
+                <a class="more disabled" href="#" title="Go to the Wikipedia article" id="to_link">Continue to article...</a>
+            </div>
         </div>
 
         <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
