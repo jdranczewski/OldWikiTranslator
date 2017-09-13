@@ -67,6 +67,7 @@ $(document).ready(function() {
                 // Workaround of the redirection problem - we do not always know the ID of the article
                 $.each(data['query']['pages'], function(index, value) {
                     sourceID = value['pageid']
+                });
                 $("#search_box").val(data['query']['pages'][sourceID]['title']);
                 $("#from_extract").text(data['query']['pages'][sourceID]['extract']);
             }
