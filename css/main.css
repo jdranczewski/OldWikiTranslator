@@ -145,6 +145,15 @@ textarea {
 .ac_el {
     padding: 7px 25px;
     border-bottom: solid #e1e1e1 1px;
+    cursor: pointer;
+}
+
+.ac_el:hover {
+    background-color: #efefef;
+}
+
+.selected {
+    background-color: #d8d8d8 !important;
 }
 
 
