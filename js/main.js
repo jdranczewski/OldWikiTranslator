@@ -35,7 +35,7 @@ $(document).ready(function() {
                 $("#autocomplete").empty();
             }
         }
-    }, 400));
+    }, 100));
     
     $("#search_box").keyup(function(e) {
         if (e.keyCode === 40 && $("#autocomplete .selected").next().length !== 0) {
@@ -57,19 +57,24 @@ $(document).ready(function() {
         $("#autocomplete").empty().hide();
         $.ajax( {
             url: 'https://en.wikipedia.org/w/api.php?callback=?',
-            data: {'action' : 'query', 'format' : 'json', 'prop' : 'extracts', 'exintro' : '', 'explaintext' : '', 'exsentences' : '3', 'redirects' : '' , 'pageids' : sourceID},
+            data: {'action' : 'query', 'format' : 'json', 'prop' : 'extracts', 'exintro' : '', 'explaintext' : '', 'exsentences' : '3', 'redirects' : '', 'pageids' : sourceID},
             dataType: 'json',
             type: 'POST',
             headers: { 'Api-User-Agent': 'Example/1.0' },
             success: function(data) {
-                datatest = data
-                console.log(data)
+                datatest = data;
+                console.log(data);
                 // Workaround of the redirection problem - we do not always know the ID of the article
                 $.each(data['query']['pages'], function(index, value) {
-                    sourceID = value['pageid']
+                    sourceID = value['pageid'];
                 });
                 $("#search_box").val(data['query']['pages'][sourceID]['title']);
                 $("#from_extract").text(data['query']['pages'][sourceID]['extract']);
+                $("#redirect").hide();
+                if (data['query']['redirects'] !== undefined) {
+                    $("#redirect span").text(data['query']['redirects'][0]['to'])
+                    $("#redirect").show();
+                }
             }
         });
     }

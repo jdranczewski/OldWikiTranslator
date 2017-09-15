@@ -115,6 +115,12 @@ textarea {
     background-color: transparent;
 }
 
+#redirect {
+    display: none;
+    font-size: 0.7em;
+    color: grey;
+}
+
 .extract {
     min-height: 250px;
 }
