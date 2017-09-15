@@ -131,9 +131,13 @@ $(document).ready(function() {
                         success: function(disdata) {
                             $("#from_extract").html(disdata['parse']['text']['*']);
                             $("#disambigbox").remove();
+                            $("#from_extract table").remove();
                             $("#from_extract .mw-parser-output a").click(function(e) {
                                 e.preventDefault();
+                                location.hash = $(this).attr("href").substr(6);
                             });
+                            $("#from_link").attr("href", "https://en.wikipedia.org/wiki/" + data['query']['pages'][sourceID]['title']);
+                            $("#from_link").removeClass("disabled");
                         }
                     });
                 }
