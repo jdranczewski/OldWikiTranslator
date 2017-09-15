@@ -66,6 +66,8 @@ $(document).ready(function() {
     function loadTranslation() {
         $("#from_link").addClass("disabled");
         $("#to_link").addClass("disabled");
+        $("#disambiguation").hide();
+        $("#redirect").hide();
         sourceID = $("#autocomplete .selected").data("id");
         $("#autocomplete").empty().hide();
         // Send a request for an original extract and check language availability
@@ -90,12 +92,24 @@ $(document).ready(function() {
                     $("#from_extract").text(data['query']['pages'][sourceID]['extract']);
                     $("#from_link").attr("href", "https://en.wikipedia.org/wiki/" + data['query']['pages'][sourceID]['title']);
                     $("#from_link").removeClass("disabled");
-                    // Show the redirectio info dialog if needed
-                    $("#redirect").hide();
+                    // Show the redirection info dialog if needed
                     if (data['query']['redirects'] !== undefined) {
                         $("#redirect span").text(data['query']['redirects'][0]['from']);
                         $("#redirect").show();
                     }
+                    // Chceck whether disambiguation available
+                    $.ajax( {
+                        url: 'https://en.wikipedia.org/w/api.php?callback=?',
+                        data: {'action' : 'query', 'format' : 'json', 'redirects' : '', 'titles' : location.hash.substr(1) + " (disambiguation)"},
+                        dataType: 'json',
+                        type: 'POST',
+                        headers: { 'Api-User-Agent': 'Example/1.0' },
+                        success: function(discheckdata) {
+                            if (discheckdata['query']['pages']['-1'] === undefined){
+                                $("#disambiguation").show();
+                            }
+                        }
+                    });
                     if (data['query']['pages'][sourceID]['langlinks'] !== undefined) {
                         // Send request for translation if available
                         $.ajax( {
@@ -138,6 +152,7 @@ $(document).ready(function() {
                             });
                             $("#from_link").attr("href", "https://en.wikipedia.org/wiki/" + data['query']['pages'][sourceID]['title']);
                             $("#from_link").removeClass("disabled");
+                            $("#to_extract").text("Choose one of the meanings on the left to see the translation.");
                         }
                     });
                 }
@@ -150,5 +165,10 @@ $(document).ready(function() {
     if (location.hash.length) {
         loadTranslation();
     }
+    
+    // Load up the disambiguation
+    $("#disambiguation").click(function() {
+        window.location.hash += " (disambiguation)";
+    });
     
 });

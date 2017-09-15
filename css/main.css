@@ -121,6 +121,13 @@ textarea {
     color: grey;
 }
 
+#disambiguation {
+    display: none;
+    text-decoration: underline;
+    cursor: pointer;
+    color: grey;
+}
+
 .extract {
     min-height: 250px;
 }
