@@ -28,7 +28,7 @@ $(document).ready(function() {
                                 $(".selected").removeClass("selected");
                                 $(this).addClass("selected");
                                 // Load the translation when a suggestion clicked
-                                loadTranslation();
+                                location.hash = $("#autocomplete .selected").text()
                             });
                             $("#autocomplete").show();
                         } else {
@@ -57,13 +57,13 @@ $(document).ready(function() {
             $("#autocomplete .selected").last().removeClass("selected");
             $("#search_box").val($("#autocomplete .selected").text());
         } else if (e.keyCode === 13 && $("#search_box").val() !== "") {
-            loadTranslation();
+            location.hash = $("#autocomplete .selected").text()
         }
         
     });
     
     // Load up the translation
-    function loadTranslation(){
+    function loadTranslation() {
         $("#from_link").addClass("disabled");
         $("#to_link").addClass("disabled");
         sourceID = $("#autocomplete .selected").data("id");
@@ -71,7 +71,7 @@ $(document).ready(function() {
         // Send a request for an original extract and check language availability
         $.ajax( {
             url: 'https://en.wikipedia.org/w/api.php?callback=?',
-            data: {'action' : 'query', 'format' : 'json', 'prop' : 'extracts|langlinks|pageprops', 'exintro' : '', 'explaintext' : '', 'exchars' : '300', 'redirects' : '', 'lllang' : 'pl', 'ppprop' : 'disambiguation', 'pageids' : sourceID},
+            data: {'action' : 'query', 'format' : 'json', 'prop' : 'extracts|langlinks|pageprops', 'exintro' : '', 'explaintext' : '', 'exchars' : '300', 'redirects' : '', 'lllang' : 'pl', 'ppprop' : 'disambiguation', 'titles' : location.hash.substr(1)},
             dataType: 'json',
             type: 'POST',
             headers: { 'Api-User-Agent': 'Example/1.0' },
@@ -139,6 +139,12 @@ $(document).ready(function() {
                 }
             }
         });
+    }
+    
+    $(window).on('hashchange', loadTranslation);
+    
+    if (location.hash.length) {
+        loadTranslation();
     }
     
 });
