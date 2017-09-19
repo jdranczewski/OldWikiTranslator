@@ -68,6 +68,7 @@ $(document).ready(function() {
         $("#to_link").addClass("disabled");
         $("#disambiguation").hide();
         $("#redirect").hide();
+        $("#section").hide();
         sourceID = $("#autocomplete .selected").data("id");
         $("#autocomplete").empty().hide();
         // Send a request for an original extract and check language availability
@@ -124,9 +125,12 @@ $(document).ready(function() {
                                     transID = value['pageid'];
                                 });
                                 // Update all the info fields and the link
-                                $("#to_title").text(transdata['query']['pages'][transID]['title']);
+                                $("#to_title").text(data['query']['pages'][sourceID]['langlinks'][0]['*'].split("#")[data['query']['pages'][sourceID]['langlinks'][0]['*'].split("#").length - 1]);
+                                    $("#section span").text(data['query']['pages'][sourceID]['langlinks'][0]['*'].split("#")[0]);
+                                    $("#section").show();
+                                }
                                 $("#to_extract").text(transdata['query']['pages'][transID]['extract']);
-                                $("#to_link").attr("href", "https://pl.wikipedia.org/wiki/" + data['query']['pages'][sourceID]['title']);
+                                $("#to_link").attr("href", "https://pl.wikipedia.org/wiki/" + transdata['query']['pages'][transID]['title']);
                                 $("#to_link").removeClass("disabled");
                             }
                         });
@@ -146,7 +150,7 @@ $(document).ready(function() {
                             $("#from_extract").html(disdata['parse']['text']['*']);
                             $("#disambigbox").remove();
                             $("#from_extract table").remove();
-                            $("#from_extract .mw-parser-output a").click(function(e) {
+                            $("#from_extract a").click(function(e) {
                                 e.preventDefault();
                                 location.hash = $(this).attr("href").substr(6);
                             });
