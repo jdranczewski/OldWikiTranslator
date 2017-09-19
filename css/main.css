@@ -103,6 +103,7 @@ textarea {
     width: 40%;
     background-color: #2196F3;
     display: inline-block;
+    vertical-align: top;
 }
 
 .title {
