@@ -126,6 +126,7 @@ $(document).ready(function() {
                                 });
                                 // Update all the info fields and the link
                                 $("#to_title").text(data['query']['pages'][sourceID]['langlinks'][0]['*'].split("#")[data['query']['pages'][sourceID]['langlinks'][0]['*'].split("#").length - 1]);
+                                if (data['query']['pages'][sourceID]['langlinks'][0]['*'].split("#").length > 1) {
                                     $("#section span").text(data['query']['pages'][sourceID]['langlinks'][0]['*'].split("#")[0]);
                                     $("#section").show();
                                 }
