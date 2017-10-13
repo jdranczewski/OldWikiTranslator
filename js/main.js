@@ -165,6 +165,12 @@ $(document).ready(function() {
         });
     }
     
+    // Load the language preference from a cookie
+    cookie_lang = monster.get($("#short_page_name").val())
+    if (cookie_lang !== null) {
+        cookie_lang == cookie_lang.split(";")
+    }
+    
     $(window).on('hashchange', loadTranslation);
     
     if (location.hash.length) {
