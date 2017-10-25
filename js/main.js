@@ -179,7 +179,14 @@ $(document).ready(function() {
     if (location.hash.length) {
         // Parse the hash string
         hash_data = location.hash.substr(1).split("//wt-")
-        loadTranslation();
+        if (hash_data.length == 1) {
+            hash_data = [hash_data[0], "pl", "en"];
+        } else if (hash_data.length == 2) {
+            hash_data = [hash_data[0], hash_data[1], "en"];
+        } else {
+            loadTranslation();
+        }
+        window.location.hash = hash_data.join("//wt-");
     } else {
         // If no data in hash onload, try cookies for language preference
         cookie_lang = monster.get("language_cookie")
@@ -194,7 +201,8 @@ $(document).ready(function() {
     
     // Load up the disambiguation
     $("#disambiguation").click(function() {
-        window.location.hash += " (disambiguation)";
+        hash_data[0] += " (disambiguation)"
+        window.location.hash = hash_data.join("//wt-");
     });
     
 });
