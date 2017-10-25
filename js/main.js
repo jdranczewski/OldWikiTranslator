@@ -58,7 +58,8 @@ $(document).ready(function() {
             $("#autocomplete .selected").last().removeClass("selected");
             $("#search_box").val($("#autocomplete .selected").text());
         } else if (e.keyCode === 13 && $("#search_box").val() !== "") {
-            location.hash = $("#autocomplete .selected").text()
+            hash_data[0] = $("#autocomplete .selected").text()
+            location.hash = hash_data.join("//wt-")
         }
         
     });
