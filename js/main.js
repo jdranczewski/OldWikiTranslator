@@ -76,8 +76,6 @@ $(document).ready(function() {
         $("#to_title").text("Loading...")
         sourceID = $("#autocomplete .selected").data("id");
         $("#autocomplete").empty().hide();
-        // Parse the hash string
-        hash_data = location.hash.substr(1).split("//wt-")
         // Send a request for an original extract and check language availability
         $.ajax( {
             url: 'https://' + hash_data[1] + '.wikipedia.org/w/api.php?callback=?',
@@ -174,8 +172,34 @@ $(document).ready(function() {
         });
     }
     
+    // Handling languages
+    // Helper function for language search
+    function shortcodeSearch(element) {
+	return (element[0] == this) 
+    }
+    
     // Hash change handling
-    $(window).on('hashchange', loadTranslation);
+    $(window).on('hashchange', hashChangeHandler);
+    
+    // Function for handling shortcodes
+    function setLangDescription() {
+        from_lang = languages.find(shortcodeSearch, hash_data[1])
+        to_lang = languages.find(shortcodeSearch, hash_data[2])
+        $("#from_shortcode").val(from_lang[0])
+        $("#from_ls_info .ls_full_name").text(from_lang[1])
+        $("#from_ls_info .ls_number").text(from_lang[2].toLocaleString().replace(/,/g," ") + " articles")
+        $("#to_shortcode").val(to_lang[1])
+        $("#to_ls_info .ls_full_name").text(to_lang[1])
+        $("#to_ls_info .ls_number").text(to_lang[2].toLocaleString().replace(/,/g," ") + " articles")
+    }
+    
+    function hashChangeHandler() {
+        // Parse the hash string
+        prev_hash_data = hash_data
+        hash_data = location.hash.substr(1).split("//wt-")
+        if (prev_hash_data[1] != hash_data[1] || prev_hash_data[2] != hash_data[2]) setLangDescription();
+        loadTranslation();
+    }
     
     if (location.hash.length) {
         // Parse the hash string
@@ -199,6 +223,7 @@ $(document).ready(function() {
             hash_data = ["", "pl", "en"]
         }
     }
+    setLangDescription();
     
     // Load up the disambiguation
     $("#disambiguation").click(function() {
