@@ -188,7 +188,7 @@ $(document).ready(function() {
         $("#from_shortcode").val(from_lang[0])
         $("#from_ls_info .ls_full_name").text(from_lang[1])
         $("#from_ls_info .ls_number").text(from_lang[2].toLocaleString().replace(/,/g," ") + " articles")
-        $("#to_shortcode").val(to_lang[1])
+        $("#to_shortcode").val(to_lang[0])
         $("#to_ls_info .ls_full_name").text(to_lang[1])
         $("#to_ls_info .ls_number").text(to_lang[2].toLocaleString().replace(/,/g," ") + " articles")
     }
