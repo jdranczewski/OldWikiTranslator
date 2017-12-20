@@ -148,6 +148,10 @@ textarea {
     pointer-events: none;
 }
 
+#section {
+    display: none;
+}
+
 #autocomplete {
     position: absolute;
     background-color: white;
