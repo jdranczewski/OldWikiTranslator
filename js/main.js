@@ -93,6 +93,7 @@ $(document).ready(function() {
         $("#to_link").addClass("disabled");
         $("#to_extract").text("Loading...");
         $("#to_title").text("Loading...");
+        $("#section").hide();
         $.ajax({
             url: 'https://' + gt[2] + '.wikipedia.org/w/api.php?callback=?',
             data: {
@@ -115,7 +116,11 @@ $(document).ready(function() {
                 });
                 // Update the title
                 $("#to_title").text(data['query']['pages'][sourceID]['title']);
-                // If not, proceed normally
+                if (to_title.split("#").length > 1) {
+                    $("#section span").text(to_title.split("#")[0]);
+                    $("#section").show();
+                    $("#to_title").text(to_title.split("#")[1]);
+                }
                 $("#to_extract").text(data['query']['pages'][sourceID]['extract']);
                 $("#to_link").attr("href", "https://" + gt[2] + ".wikipedia.org/wiki/" + data['query']['pages'][sourceID]['title']);
                 $("#to_link").removeClass("disabled");
