@@ -237,4 +237,34 @@ $(document).ready(function() {
         }
         
     });
+    
+    // Language autocomplete
+    var options = {
+	url: "js/langlist.json",
+        getValue: "nm",
+        list: {
+            maxNumberOfElements: 5,
+            match: {
+                enabled: true
+            },
+            onChooseEvent: function() {
+                hash_data = gt.slice();
+                hash_data[1] = $("#from_shortcode").getSelectedItemData().sc;
+                location.hash = hash_data.join("//wt-");
+            }
+	},
+        template: {
+            type: "custom",
+            method: function(value, item) {
+                return "<i>" + value + "</i><br>" + item.sc + " | " + item.no;
+            }
+	}
+    };
+    $("#from_shortcode").easyAutocomplete(options);
+    options["list"]["onChooseEvent"] = function() {
+        hash_data = gt.slice();
+        hash_data[2] = $("#to_shortcode").getSelectedItemData().sc;
+        location.hash = hash_data.join("//wt-");
+    }
+    $("#to_shortcode").easyAutocomplete(options);
 });
