@@ -116,6 +116,7 @@ $(document).ready(function() {
                 });
                 // Update the title
                 $("#to_title").text(data['query']['pages'][sourceID]['title']);
+                // Handling redirects to section
                 if (to_title.split("#").length > 1) {
                     $("#section span").text(to_title.split("#")[0]);
                     $("#section").show();
