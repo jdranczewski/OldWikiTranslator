@@ -129,6 +129,44 @@ $(document).ready(function() {
         });
     }
     
+    //Handle a hash change
+    $(window).on('hashchange', hashChangeHandler);
+    function hashChangeHandler() {
+        hash_data = location.hash.substr(1).split("//wt-");
+        // If either source word or language changed, refresh everything.
+        if (gt[0] != hash_data[0] || gt[1] != hash_data[1]) {
+            gt = hash_data;
+            displayFrom();
+        // If the translation language changed, fetch a new translation title
+        // and refresh the translation display.
+        } else if (gt[2] != hash_data[2]) {
+            gt = hash_data;
+            $.ajax({
+                url: 'https://' + gt[1] + '.wikipedia.org/w/api.php?callback=?',
+                data: {
+                    'action' : 'query',
+                    'format' : 'json',
+                    // We only need the language link this time.
+                    'prop' : 'langlinks',
+                    'redirects' : '',
+                    'lllang' : gt[2], 
+                    'titles' : decodeURIComponent(gt[0])},
+                dataType: 'json',
+                type: 'POST',
+                headers: { 'Api-User-Agent': 'Example/1.0' },
+                success: function(data) {
+                    console.log(data)
+                    // Get the ID of the article.
+                    $.each(data['query']['pages'], function(index, value) {
+                        sourceID = value['pageid'];
+                    });
+                    to_title = data['query']['pages'][sourceID]['langlinks'][0]['*']
+                    displayTo();
+                }
+            });
+        }
+    }
+    
     // Display autocomplete for title input (with throttling).
     $("#search_box").keyup($.throttle(function(e) {
         if (e.keyCode !== 40 && e.keyCode !== 38 && e.keyCode !== 13) {
@@ -160,8 +198,10 @@ $(document).ready(function() {
                                 $(".selected").removeClass("selected");
                                 $(this).addClass("selected");
                                 // Load the translation when a suggestion clicked
-                                gt[0] = $("#autocomplete .selected").text();
-                                location.hash = gt.join("//wt-");
+                                hash_data = gt.slice();
+                                hash_data[0] = $("#autocomplete .selected").text();
+                                location.hash = hash_data.join("//wt-");
+                                $("#autocomplete").empty().hide();
                             });
                             $("#autocomplete").show();
                         } else {
@@ -190,8 +230,10 @@ $(document).ready(function() {
             $("#autocomplete .selected").last().removeClass("selected");
             $("#search_box").val($("#autocomplete .selected").text());
         } else if (e.keyCode === 13 && $("#search_box").val() !== "") {
-            gt[0] = $("#autocomplete .selected").text();
-            location.hash = gt.join("//wt-");
+            hash_data = gt.slice();
+            hash_data[0] = $("#autocomplete .selected").text();
+            location.hash = hash_data.join("//wt-");
+            $("#autocomplete").empty().hide();
         }
         
     });
