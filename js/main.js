@@ -26,6 +26,9 @@ $(document).ready(function() {
     window.location.hash = gt.join("//wt-");
     monster.set("language_cookie",gt[1]+";"+gt[2]);
     
+    // Create an empty variable to store the translated article title.
+    to_title = ""
+    
     // Display the original language article.
     function displayFrom() {
         // Clear the dispalyed data.
@@ -73,8 +76,51 @@ $(document).ready(function() {
                 } else {
                     //TODO: Display Disambiguation.
                 }
+                // Save the title of the translated article for later use.
+                to_title = data['query']['pages'][sourceID]['langlinks'][0]['*']
+                displayTo()
             }
         });
     }
-    displayFrom();
+    
+    if(gt[0] != "") {
+        displayFrom();
+    }
+    
+    // Display the translated language of the article.
+    function displayTo() {
+        // Clear the dispalyed data.
+        $("#to_link").addClass("disabled");
+        $("#to_extract").text("Loading...");
+        $("#to_title").text("Loading...");
+        $.ajax({
+            url: 'https://' + gt[2] + '.wikipedia.org/w/api.php?callback=?',
+            data: {
+                'action' : 'query',
+                'format' : 'json',
+                'prop' : 'extracts',
+                'exintro' : '',
+                'explaintext' : '',
+                'exchars' : '300',
+                'redirects' : '',
+                'titles' : to_title},
+            dataType: 'json',
+            type: 'POST',
+            headers: { 'Api-User-Agent': 'Example/1.0' },
+            success: function(data) {
+                console.log(data)
+                // Get the ID of the article
+                $.each(data['query']['pages'], function(index, value) {
+                    sourceID = value['pageid'];
+                });
+                // Update the title
+                $("#to_title").text(data['query']['pages'][sourceID]['title']);
+                // If not, proceed normally
+                $("#to_extract").text(data['query']['pages'][sourceID]['extract']);
+                $("#to_link").attr("href", "https://" + gt[2] + ".wikipedia.org/wiki/" + data['query']['pages'][sourceID]['title']);
+                $("#to_link").removeClass("disabled");
+            }
+        });
+    }
+    
 });
