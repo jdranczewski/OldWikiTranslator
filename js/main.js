@@ -110,7 +110,7 @@ $(document).ready(function() {
             headers: { 'Api-User-Agent': 'Example/1.0' },
             success: function(data) {
                 console.log(data)
-                // Get the ID of the article
+                // Get the ID of the article.
                 $.each(data['query']['pages'], function(index, value) {
                     sourceID = value['pageid'];
                 });
@@ -129,4 +129,70 @@ $(document).ready(function() {
         });
     }
     
+    // Display autocomplete for title input (with throttling).
+    $("#search_box").keyup($.throttle(function(e) {
+        if (e.keyCode !== 40 && e.keyCode !== 38 && e.keyCode !== 13) {
+            if ($("#search_box").val() !== "") {
+                // Send a request for search
+                $.ajax( {
+                    url: 'https://' + gt[1] + '.wikipedia.org/w/api.php?callback=?',
+                    data: {
+                        'action' : 'query',
+                        'format' : 'json',
+                        'list' : 'prefixsearch',
+                        'pslimit' : 5,
+                        'pssearch' : $("#search_box").val()},
+                    dataType: 'json',
+                    type: 'POST',
+                    headers: { 'Api-User-Agent': 'Example/1.0' },
+                    success: function(data) {
+                        console.log(data);
+                        // Fill up the autocomplete dialog
+                        $("#autocomplete").empty();
+                        $.each(data['query']['prefixsearch'], function(index, value) {
+                            $("#autocomplete").append("<div class='ac_el'>" + value['title'] + '</div>');
+                        });
+                        // Show the autocomplete window and setup a click event handler
+                        // (if the window is not empty)
+                        if (data['query']['prefixsearch'].length) {
+                            $("#autocomplete .ac_el").first().addClass("selected");
+                            $("#autocomplete .ac_el").click(function() {
+                                $(".selected").removeClass("selected");
+                                $(this).addClass("selected");
+                                // Load the translation when a suggestion clicked
+                                gt[0] = $("#autocomplete .selected").text();
+                                location.hash = gt.join("//wt-");
+                            });
+                            $("#autocomplete").show();
+                        } else {
+                            // Hide the box if there are no suggestions
+                            $("#autocomplete").hide();
+                        }
+                    }
+                });
+            } else {
+                // Hide the box if the input field is empty
+                $("#autocomplete").hide();
+                $("#autocomplete").empty();
+            }
+        }
+    // The wait time between successive autocomplete calls
+    }, 100));
+    
+    // Selecting the autocomplete suggestions with keyboard buttons
+    $("#search_box").keyup(function(e) {
+        if (e.keyCode === 40 && $("#autocomplete .selected").next().length !== 0) {
+            $("#autocomplete .selected").next().addClass("selected");
+            $("#autocomplete .selected").first().removeClass("selected");
+            $("#search_box").val($("#autocomplete .selected").text());
+        } else if (e.keyCode === 38 && $("#autocomplete .selected").prev().length !== 0) {
+            $("#autocomplete .selected").prev().addClass("selected");
+            $("#autocomplete .selected").last().removeClass("selected");
+            $("#search_box").val($("#autocomplete .selected").text());
+        } else if (e.keyCode === 13 && $("#search_box").val() !== "") {
+            gt[0] = $("#autocomplete .selected").text();
+            location.hash = gt.join("//wt-");
+        }
+        
+    });
 });
